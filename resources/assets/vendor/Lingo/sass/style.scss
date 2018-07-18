@@ -1,0 +1,97 @@
+@import './checkbox';
+@import './animate';
+
+td,
+th {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+th,
+.sticky-section {
+    position: sticky;
+    z-index: 1;
+    top: 0;
+    background-color: white;
+}
+
+.sticky-section {
+    padding: 2rem 0 1.5rem;
+}
+
+.nestedKeys {
+    color: white;
+    background-color: #363636 !important;
+}
+
+// util
+.m-t-40 {
+    margin-top: 40px;
+}
+
+.m-t-10 {
+    margin-top: 10px;
+}
+
+.p-10 {
+    padding: 10px;
+}
+
+.link {
+    cursor: pointer;
+}
+
+.is-borderless {
+    border: none;
+}
+
+// animation
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+    transition: all 0.4s;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+    transform: translateX(10px);
+    opacity: 0;
+}
+
+.comp-fade-enter-active,
+.comp-fade-leave-active {
+    transition: all 0.4s;
+}
+
+.comp-fade-enter,
+.comp-fade-leave-to {
+    transform: translateX(-30px);
+    opacity: 0;
+}
+
+// bulma
+.tabs {
+    margin-top: 50px !important;
+    margin-bottom: 0 !important;
+}
+
+.table {
+    word-break: break-word;
+
+    th {
+        word-break: initial;
+    }
+
+    td,
+    th {
+        vertical-align: middle;
+    }
+}
+
+.tags {
+    display: inline-flex;
+    flex-wrap: nowrap;
+}
+
+.icon {
+    vertical-align: sub;
+}

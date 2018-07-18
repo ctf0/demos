@@ -1,5 +1,8 @@
-# Demos
+# [Lingo](https://github.com/ctf0/Lingo)
 
-- [Laravel Media Manager](https://github.com/ctf0/demos/tree/media-manager)
-- [SimpleMenu](https://github.com/ctf0/demos/tree/simple-menu)
-- [Tagos](https://github.com/ctf0/demos/tree/tagos)
+- `git clone -b lingo --single-branch https://github.com/ctf0/demos lingo`
+- `cd lingo/`
+- `npm`
+- `composer update`
+- `php artisan serve`
+- visit `localhost:8000/lingo`
