@@ -1,0 +1,159 @@
+@import './checkbox';
+$blue: #3273dc;
+$mce-brdr: #eee;
+$mce-btn: #a3afb7;
+
+[v-cloak] {
+    display: none;
+}
+
+td {
+    vertical-align: middle !important;
+}
+
+thead th {
+    position: sticky;
+    z-index: 1;
+    top: 0;
+    background-color: white;
+}
+
+.m-t-5 {
+    margin-top: 5px;
+}
+
+.link {
+    cursor: pointer;
+}
+
+// select
+.choices {
+    font-size: 1rem;
+}
+
+.choices__inner {
+    font-size: 1rem;
+    min-height: 29px;
+    padding: 0.5rem;
+    border-radius: 3px;
+    background-color: transparent;
+}
+
+.choices__input {
+    width: auto !important;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+}
+
+.choices__list--multiple .choices__item {
+    margin-bottom: 0;
+    border: none;
+    border-radius: 100vw;
+    background-color: $blue;
+}
+
+.choices__button {
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-left: 1.5rem !important;
+    border: none !important;
+}
+
+// input locales
+.input-box {
+    position: relative;
+}
+
+.toggle-locale {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 1px;
+    opacity: 0.3;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &::after {
+        display: none !important;
+    }
+
+    select {
+        font-weight: bold;
+        padding: 0.4rem 0.5rem 0.5rem !important;
+        text-transform: capitalize;
+        border: none;
+        background-color: transparent;
+    }
+}
+
+.toggle-pad {
+    padding-right: 32px;
+}
+
+// tinymce
+.mce-statusbar {
+    border: none !important;
+}
+
+.mce-path {
+    visibility: hidden !important;
+}
+
+.mce-panel {
+    border-color: $mce-brdr !important;
+    border-radius: 3px !important;
+}
+
+.mce-tinymce,
+.mce-top-part::before {
+    box-shadow: none !important;
+}
+
+.mce-btn {
+    &:hover,
+    &:active {
+        border-color: transparent !important;
+    }
+
+    button {
+        padding: 4px 8px !important;
+    }
+}
+
+.mce-btn-group:not(:first-child) {
+    border-left: none !important;
+}
+
+.mce-btn,
+.mce-ico {
+    color: $mce-btn !important;
+}
+
+// ace
+#ace-editor {
+    width: 100%;
+    height: 500px;
+}
+
+// menu
+.menu-item {
+    margin-bottom: 0.5em !important;
+    padding: 0.5em;
+    padding-left: 1em;
+}
+
+.dragArea {
+    display: block;
+    min-height: 25px;
+}
+
+.ghost {
+    opacity: 1;
+}
+
+.is-white {
+    color: white;
+}

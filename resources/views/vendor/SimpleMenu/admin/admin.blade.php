@@ -1,0 +1,1 @@
+@include("SimpleMenu::admin.shared")
