@@ -5,5 +5,6 @@
 - `npm`
 - `composer update`
 - `php arisan storage:link`
+- https://github.com/ctf0/Laravel-Media-Manager/wiki/Lock-Files-&-Folder
 - `php artisan serve`
 - visit `localhost:8000/media`
