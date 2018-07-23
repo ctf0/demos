@@ -2,8 +2,8 @@
 
 - `git clone -b media-manager --single-branch https://github.com/ctf0/demos media-manager`
 - `cd media-manager/`
-- `php arisan storage:link`
 - `npm`
 - `composer update`
+- `php arisan storage:link`
 - `php artisan serve`
 - visit `localhost:8000/media`
