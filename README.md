@@ -7,5 +7,6 @@
 - `php artisan storage:link`
 - `php artisan vendor:publish --provider="ctf0\MediaManager\MediaManagerServiceProvider" --force`
 - https://github.com/ctf0/Laravel-Media-Manager/wiki/Lock-Files-&-Folder
+- `npm run watch`
 - `php artisan serve`
 - visit `localhost:8000/media`
