@@ -1,6 +1,8 @@
 <?php
 
-Auth::loginUsingId(1);
+if (!app()->runningInConsole()) {
+    Auth::loginUsingId(1);
+}
 
 /*
 |--------------------------------------------------------------------------
