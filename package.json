@@ -24,6 +24,7 @@
         "keycode": "^2.2.0",
         "lottie-web": "^5.1.20",
         "vue-async-computed": "^3.3.1",
+        "vue-input-autowidth": "^1.0.2",
         "vue-awesome": "v2",
         "vue-clipboard2": "^0.2.0",
         "vue-ls": "^3.1.0",
