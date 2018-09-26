@@ -27,11 +27,13 @@
         "vue-input-autowidth": "^1.0.2",
         "vue-awesome": "v2",
         "vue-clipboard2": "^0.2.0",
+        "vue-image-compare2": "^0.7.1",
         "vue-ls": "^3.1.0",
         "vue-notif": "^1.1.6",
         "vue-tippy": "v1",
         "vue-touch": "^2.0.0-beta.4",
         "vue2-filters": "^0.3.0",
+        "vue-list-rendered": "^1.0.1",
         "plyr": "^3.4.3"
     }
 }
