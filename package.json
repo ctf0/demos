@@ -10,30 +10,30 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "cross-env": "^5.1",
-        "laravel-mix": "^2.0"
+        "cross-env": "^5.2",
+        "laravel-mix": "^4.0"
     },
     "dependencies": {
         "axios": "^0.18.0",
-        "vue": "^2.5.16",
-        "cropperjs": "^1.4.1",
-        "date-fns": "^1.29.0",
+        "vue": "^2.5.22",
+        "cropperjs": "^1.4.3",
+        "date-fns": "^1.30.1",
         "dropzone": "^5.5.1",
-        "fuse.js": "^3.2.1",
-        "idb-keyval": "^3.0.5",
+        "fuse.js": "^3.3.0",
+        "idb-keyval": "^3.1.0",
         "keycode": "^2.2.0",
-        "lottie-web": "^5.1.20",
-        "vue-async-computed": "^3.3.1",
+        "lottie-web": "^5.4.3",
+        "vue-async-computed": "^3.5.1",
         "vue-input-autowidth": "^1.0.2",
         "vue-awesome": "v2",
-        "vue-clipboard2": "^0.2.0",
-        "vue-image-compare2": "^0.7.1",
-        "vue-ls": "^3.1.0",
-        "vue-notif": "^1.1.6",
+        "vue-clipboard2": "^0.2.1",
+        "vue-image-compare2": "^0.7.2",
+        "vue-ls": "^3.2.0",
+        "vue-notif": "^1.1.10",
         "vue-tippy": "v1",
         "vue-touch": "^2.0.0-beta.4",
-        "vue2-filters": "^0.3.0",
+        "vue2-filters": "^0.4.1",
         "vue-list-rendered": "^1.0.1",
-        "plyr": "^3.4.3"
+        "plyr": "^3.4.8"
     }
 }
