@@ -2,9 +2,9 @@
 
 return [
     /*
-     * ignore files pattern
-     *
      * ignore any file starts with "."
+     *
+     * "clear browser cache on change"
      */
     'ignore_files' => '/^\..*/',
 
@@ -19,37 +19,61 @@ return [
     'controller' => '\ctf0\MediaManager\Controllers\MediaController',
 
     /*
-     * remove any file special chars except (. _ -)
+     * remove any file special chars except
+     * dot .
+     * dash -
+     * underscore _
+     * single quote ''
+     * white space
+     * parentheses ()
+     * comma ,
      */
-    'allowed_fileNames_chars' => '.\_\-',
+    'allowed_fileNames_chars' => '.\_\-\'\s\(\)\,',
 
     /*
-     * remove any folder special chars except (_ -)
+     * remove any folder special chars except
+     * dash -
+     * underscore _
+     * white space
      *
-     * to add & nest folders in one go use '\/\_\-'
+     * to add & nest folders in one go add '\/'
      */
-    'allowed_folderNames_chars' => '\_\-',
+    'allowed_folderNames_chars' => '\_\-\s',
 
     /*
      * disallow uploading files with the following mimetypes
-     * https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
+     * https://www.iana.org/assignments/media-types/media-types.xhtml
      */
     'unallowed_mimes' => ['php', 'java'],
 
     /*
-     * other mime-types for images
+     * extra mime-types
      */
-    'image_extended_mimes' => [
-        'binary/octet-stream', // aws
+    'extended_mimes' => [
+        // any extra mime-types that doesnt have "image" in it
+        'image' => [
+            'binary/octet-stream', // aws
+        ],
+
+        // any extra mime-types that doesnt have "compressed" in it
+        'archive' => [
+            'application/x-tar',
+            'application/zip',
+        ],
     ],
 
     /*
      * when file names gets cleand up
+     *
+     * put here any global function that 
+     * doesnt take arguments
      */
-    'sanitized_text' => uniqid(),
+    'sanitized_text' => 'uniqid',
 
     /*
      * display file last modification time as
+     *
+     * "clear browser cache on change"
      *
      * check "/vendor/nesbot/carbon/src/Carbon/Carbon.php"
      */
@@ -62,6 +86,8 @@ return [
 
     /*
      * load image preview when item is clicked
+     *
+     * "clear browser cache on change"
      */
     'lazy_load_image_on_click' => false,
 
@@ -69,12 +95,14 @@ return [
      * automatically invalidate cache after ?
      * in "Minutes"
      */
-    'cacheExpiresAfter' => 60,
+    'cache_expires_after' => 60,
 
     /*
      * in-order to get the folder items count & size
      * we need to recursively get all the files inside the folders
      * which could make the request take longer
+     *
+     * "clear browser cache on change"
      */
     'get_folder_info' => true,
 
@@ -85,4 +113,10 @@ return [
      * "laravel-echo" must be installed
      */
     'enable_broadcasting' => false,
+
+    /*
+     * show "an itunes like" content ratio bar
+     * above the manager
+     */
+    'show_ratio_bar' => true,
 ];
