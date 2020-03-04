@@ -14,7 +14,7 @@ return [
     /*
      * manager controller
      */
-    'controller' => '\ctf0\MediaManager\Controllers\MediaController',
+    'controller' => '\ctf0\MediaManager\App\Controllers\MediaController',
 
     /*
      * remove any file special chars except
@@ -117,5 +117,5 @@ return [
     /*
      * loaded chunk amount "pagination"
      */
-    'pagination_amount' => 20,
+    'pagination_amount' => 30,
 ];

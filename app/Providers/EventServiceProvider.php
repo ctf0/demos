@@ -25,9 +25,9 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        app('events')->listen('MMFileUploaded', function ($file_path, $mime_type, $options) {
-            logger([$file_path, $mime_type, $options]);
-        });
+        // app('events')->listen('MMFileSaved', function ($file_path, $mime_type) {
+        //     logger($file_path);
+        // });
     }
 
     /**

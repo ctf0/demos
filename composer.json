@@ -8,12 +8,13 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.1.3",
-        "fideloper/proxy": "*",
-        "laravel/framework": "6.*",
+        "php": "^7.0",
         "ctf0/media-manager": "dev-master",
-        "league/flysystem-cached-adapter": "*",
-        "laravel/tinker": "*"
+        "fideloper/proxy": "*",
+        "jhofm/flysystem-iterator": "^2.1",
+        "laravel/framework": "7.*",
+        "laravel/tinker": "*",
+        "league/flysystem-cached-adapter": "*"
     },
     "require-dev": {
         "filp/whoops": "*",

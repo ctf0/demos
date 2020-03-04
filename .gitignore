@@ -15,6 +15,6 @@ npm-debug.log
 yarn-error.log
 *.lock
 .DS_STORE
-/.history
+.history
 /resources/assets/vendor
 /resources/views/vendor
