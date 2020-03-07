@@ -101,12 +101,16 @@ export default {
                     return this.showNotif(data.message, 'danger')
                 }
 
+                Array.from(document.querySelectorAll('.changedKeys')).forEach((e) => {
+                    e.classList.remove('changedKeys')
+                })
+
                 this.dataChanged = false
                 this.newKeys = ''
                 this.newItemCounter = 0
                 this.selectedFileData = cloneDeep(formatData)
                 this.showNotif(data.message)
-                this.resetSearch()
+                // this.resetSearch()
 
             }).catch((err) => {
                 console.error(err)

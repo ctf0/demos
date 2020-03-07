@@ -28,29 +28,26 @@
                     <lingo inline-template v-cloak
                         :translations="{{ $lingo_trans }}"
                         :routes={{ json_encode([
-                            'scanForMissingRoute' => route('lingo.scan_for_missing'), 
-                            'addNewLocaleRoute' => route('lingo.add_new_locale'), 
-                            'addNewFileRoute' => route('lingo.add_new_file'), 
-                            'addNewVendorRoute' => route('lingo.add_new_vendor'), 
-                            'filesRoute' => route('lingo.get_files'), 
-                            'selectedFileDataRoute' => route('lingo.get_file_data'), 
-                            'deleteFileRoute' => route('lingo.delete_file'), 
-                            'deleteLocaleRoute' => route('lingo.delete_locale'), 
-                            'saveFileRoute' => route('lingo.save_file_data'), 
-                            'downloadVendorRoute' => route('lingo.download_dir'), 
-                            'downloadFileRoute' => route('lingo.download_file'), 
+                            'addNewLocaleRoute' => route('lingo.add_new_locale'),
+                            'addNewFileRoute' => route('lingo.add_new_file'),
+                            'addNewVendorRoute' => route('lingo.add_new_vendor'),
+                            'filesRoute' => route('lingo.get_files'),
+                            'selectedFileDataRoute' => route('lingo.get_file_data'),
+                            'deleteFileRoute' => route('lingo.delete_file'),
+                            'deleteLocaleRoute' => route('lingo.delete_locale'),
+                            'saveFileRoute' => route('lingo.save_file_data'),
+                            'downloadVendorRoute' => route('lingo.download_dir'),
+                            'downloadFileRoute' => route('lingo.download_file')
                         ]) }}>
                         <div>
 
-                            <transition-group tag="ul" name="comp-fade" mode="out-in">
-                                {{-- add new vendor --}}
-                                <li :key="1" class="columns" v-if="activeTabIs('vendor-tab')">
+                            {{-- add new vendor --}}
+                            <transition name="lin-comp-fade">
+                                <li class="columns" v-if="activeTabIs('vendor-tab')">
                                     <div class="column is-3">
                                         <p class="title is-marginless">
                                             {{-- steps --}}
-                                            <transition name="slide-fade">
-                                                <span v-if="newVendor() && !selectedDirName" class="title has-text-success">1.</span>
-                                            </transition>
+                                            <span v-if="newVendor() && !selectedDirName" class="title has-text-success">1.</span>
 
                                             <span class="icon"><icon name="archive" scale="2"></icon></span>
                                             <span>{{ trans('Lingo::messages.new_vendor') }}</span>
@@ -77,20 +74,20 @@
                                             </p>
                                         </div>
 
-                                        <transition name="slide-fade">
+                                        <transition name="lin-slide-fade">
                                             <p class="help is-danger" v-if="dirExist">{{ trans('Lingo::messages.already_exist') }}</p>
                                         </transition>
                                     </div>
                                 </li>
+                            </transition>
 
-                                {{-- add new lang --}}
-                                <li :key="2" class="columns" v-if="localesList.length || newVendor()">
+                            {{-- add new lang --}}
+                            <transition name="lin-comp-fade">
+                                <li class="columns" v-if="localesList.length || newVendor()">
                                     <div class="column is-3">
                                         <p class="title is-marginless">
                                             {{-- steps --}}
-                                            <transition name="slide-fade">
-                                                <span v-if="newVendor() && localesList.length == 0" class="title has-text-success">2.</span>
-                                            </transition>
+                                            <span v-if="newVendor() && localesList.length == 0" class="title has-text-success">2.</span>
 
                                             <span class="icon"><icon name="globe" scale="2"></icon></span>
                                             <span>{{ trans('Lingo::messages.new_locale') }}</span>
@@ -117,20 +114,20 @@
                                             </p>
                                         </div>
 
-                                        <transition name="slide-fade">
+                                        <transition name="lin-slide-fade">
                                             <p class="help is-danger" v-if="localeExist">{{ trans('Lingo::messages.already_exist') }}</p>
                                         </transition>
                                     </div>
                                 </li>
+                            </transition>
 
-                                {{-- add new file --}}
-                                <li :key="3" class="columns" v-if="filesList.length || newVendor()">
+                            {{-- add new file --}}
+                            <transition name="lin-comp-fade">
+                                <li class="columns" v-if="filesList.length || newVendor()">
                                     <div class="column is-3">
                                         <p class="title is-marginless">
                                             {{-- steps --}}
-                                            <transition name="slide-fade">
-                                                <span v-if="newVendor()" class="title has-text-success">3.</span>
-                                            </transition>
+                                            <span v-if="newVendor()" class="title has-text-success">3.</span>
 
                                             <span class="icon"><icon name="file-o" scale="2"></icon></span>
                                             <span>{{ trans('Lingo::messages.new_file') }}</span>
@@ -157,12 +154,12 @@
                                             </p>
                                         </div>
 
-                                        <transition name="slide-fade">
+                                        <transition name="lin-slide-fade">
                                             <p class="help is-danger" v-if="fileExist">{{ trans('Lingo::messages.already_exist') }}</p>
                                         </transition>
                                     </div>
                                 </li>
-                            </transition-group>
+                            </transition>
 
                             {{-- utils --}}
                             <div class="level m-t-10">
@@ -176,26 +173,12 @@
                                                     <select v-model="selectedKeyFormat">
                                                         <option value="" disabled><span>{{ trans('Lingo::messages.key_format') }}</span></option>
                                                         <option value="clear">Non</option>
-                                                        <option v-for="(item, index) in copyKeyFormat" :key="index">
-                                                            @{{ item }}
-                                                        </option>
+                                                        <option v-for="(item, index) in copyKeyFormat" :key="index">@{{ item }}</option>
                                                     </select>
                                                 </div>
                                                 <div class="icon is-medium is-left has-text-black-ter">
                                                     <icon name="keyboard-o"></icon>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{-- scan for missing trans --}}
-                                    <div class="level-item">
-                                        <div class="field">
-                                            <div class="control">
-                                                <button @click="scanForMissing()" class="button is-link">
-                                                    <span class="icon"><icon name="qrcode"></icon></span>
-                                                    <span>{{ trans('Lingo::messages.scan') }}</span>
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -222,7 +205,7 @@
                             </div>
 
                             {{-- Tabs Toggle --}}
-                            <transition name="comp-fade" mode="out-in">
+                            <transition name="lin-comp-fade" mode="out-in">
                                 <keep-alive>
                                     <component :is="activeTab"
                                         dirs-route="{{ route('lingo.vendor_dirs') }}"

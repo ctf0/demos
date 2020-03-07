@@ -13,3 +13,6 @@ let mix = require('laravel-mix')
 
 mix.js('resources/assets/js/app.js', 'public/js')
 // .sass('resources/assets/sass/app.scss', 'public/css');
+
+// Lingo
+mix.sass('resources/assets/vendor/Lingo/sass/style.scss', 'public/assets/vendor/Lingo/style.css')

@@ -6,7 +6,7 @@
             <div class="level">
                 <!-- add copied -->
                 <div class="level-left">
-                    <transition name="slide-fade">
+                    <transition name="lin-slide-fade">
                         <div v-if="selectedFile" class="level-item">
                             <button :disabled="!copiedItem" class="button" @click.prevent="addCopiedItem()">
                                 {{ trans('add_copied') }}
@@ -17,7 +17,7 @@
 
                 <!-- select file -->
                 <div class="level-right">
-                    <transition name="slide-fade">
+                    <transition name="lin-slide-fade">
                         <div v-if="showSection()" class="field is-grouped is-grouped-right">
                             <div class="control has-icons-left">
                                 <div class="select">
@@ -49,14 +49,14 @@
                 </div>
             </div>
 
-            <transition name="slide-fade">
+            <transition name="lin-slide-fade">
                 <div v-if="selectedFile && selectedFileDataClone" class="level is-mobile is-marginless m-t-40">
                     <!-- items count -->
                     <div class="level-left">
                         <div class="level-item">
                             <h4 class="title is-4">"{{ itemsCount }}" {{ trans('items') }}</h4>
                         </div>
-                        <transition name="slide-fade">
+                        <transition name="lin-slide-fade">
                             <div v-if="itemsCount" class="level-item">
                                 <scroll/>
                             </div>
@@ -70,6 +70,7 @@
                                 <p class="control has-icons-left">
                                     <input ref="search"
                                            :placeholder="trans('find')"
+                                           :value="searchFor"
                                            class="input"
                                            type="text"
                                            @input="debounceInput">
@@ -91,23 +92,23 @@
         </section>
 
         <!-- data -->
-        <transition name="slide-fade">
+        <transition name="lin-slide-fade">
             <section v-if="selectedFile">
                 <!-- table -->
                 <table :style="THeadTop" class="table is-fullwidth is-hoverable is-bordered">
                     <thead>
                         <tr class="is-unselectable">
-                            <th class="is-link" width="1%">
+                            <th class="is-link static-cell">
                                 <div class="field has-addons is-marginless">
                                     <div class="control">
-                                        <button :disabled="toBeMergedKeys.length < 2" class="button is-borderless" @click="toggleModal(true)">
-                                            {{ trans('merge_keys') }}
+                                        <button :disabled="mergerKeysCount < 2" class="button is-borderless" @click="toggleModal(true)">
+                                            {{ trans('update') }}
                                         </button>
                                     </div>
 
                                     <div class="control">
                                         <div class="button is-borderless is-light">
-                                            <input id="all" :checked="toBeMergedKeys.length" type="checkbox" class="cbx-checkbox" @click="wrapAll()">
+                                            <input id="all" :checked="mergerKeysCount" type="checkbox" class="cbx-checkbox" @click="wrapAll()">
                                             <label for="all" class="cbx is-marginless">
                                                 <svg width="14px" height="12px" viewBox="0 0 14 12"><polyline points="1 7.6 5 11 13 1"/></svg>
                                             </label>
@@ -115,7 +116,7 @@
                                     </div>
                                 </div>
                             </th>
-                            <th class="is-link link" width="1%" @click="sortBy('key')">{{ trans('key') }}</th>
+                            <th class="is-link link static-cell" @click="sortBy('key')">{{ trans('key') }}</th>
                             <th v-for="(l, i) in locales" :key="i" class="is-link link" @click="sortBy(l)">
                                 <div class="tags has-addons is-marginless">
                                     <span class="tag is-marginless link is-light is-medium">{{ l }}</span>
@@ -128,33 +129,29 @@
                         </tr>
                     </thead>
 
-                    <tbody>
-                        <tr v-for="(item, i) in filteredList" :key="i">
+                    <transition-group tag="tbody" name="lin-slide-fade" mode="out-in">
+                        <tr v-for="(item, i) in filteredList" :key="item.name">
 
                             <!-- merge -->
-                            <td style="text-align: center;">
-                                <input :id="item.name"
+                            <td class="has-text-centered link" @click="clickOnCkBox(`item-${i}`)">
+                                <input :id="`item-${i}`"
                                        :value="item.name"
-                                       v-model="toBeMergedKeys"
+                                       v-model="keysToBeMerged"
                                        type="checkbox"
                                        class="cbx-checkbox">
-                                <label :for="item.name" class="cbx is-marginless">
+                                <label :for="`item-${i}`" class="cbx is-marginless" @click.prevent>
                                     <svg width="14px" height="12px" viewBox="0 0 14 12"><polyline points="1 7.6 5 11 13 1"/></svg>
                                 </label>
                             </td>
 
                             <!-- key -->
-                            <td v-tippy="{position : 'right', arrow: true, interactive: true, trigger: 'mouseenter'}"
-                                :title="getKey(item.name)"
+                            <td v-tippy="{placement: 'right', arrow: true, interactive: true}"
+                                :title="getTTC(getKey(item.name), item.locales)"
                                 :class="{'nestedKeys' : item.name && item.name.includes('.')}"
                                 :data-main-key="item.name"
-                                :ref="`td-${item.name}`"
-                                nowrap
+                                class="static-cell"
                                 contenteditable
                                 dir="auto"
-
-                                data-html="#tippyTemplate"
-                                @mouseenter="keyToCopy = getKey(item.name)"
                                 @keydown.enter.prevent
                                 @input="newEntry()"
                                 @blur="saveNewKey($event)">
@@ -172,12 +169,12 @@
                                 {{ codeV }}
                             </td>
 
-                            <td width="1%">
+                            <td class="static-cell">
                                 <!-- del -->
                                 <button v-tippy
                                         :title="trans('delete')"
                                         class="button is-danger"
-                                        @click="removeItem(i)">
+                                        @click="removeItem(item.name, i)">
                                     <span class="icon"><icon name="trash"/></span>
                                 </button>
                                 <!-- clone -->
@@ -191,12 +188,12 @@
                         </tr>
 
                         <!-- nothing found -->
-                        <tr v-if="noData()">
-                            <td :colspan="locales.length + 3" style="text-align: center">
+                        <tr v-if="noData()" key="noData">
+                            <td :colspan="locales.length + 3" class="has-text-centered">
                                 {{ trans('no_data') }}
                             </td>
                         </tr>
-                    </tbody>
+                    </transition-group>
                 </table>
 
                 <!-- ops -->
@@ -225,43 +222,71 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- tippy template -->
-                <div id="tippyTemplate">
-                    <span class="c2c">{{ keyToCopy }}</span>
-                </div>
             </section>
         </transition>
 
         <!-- modal -->
         <div :class="{'is-active': showModal}"
-             class="modal animated fadeIn">
+             class="modal lin-animated fadeIn">
             <div class="modal-background link" @click="toggleModal()"/>
-            <div class="modal-card animated fadeInDown">
+            <div class="modal-card lin-animated fadeInDown">
                 <header class="modal-card-head">
-                    <p class="modal-card-title"><span>{{ trans('merge_keys') }}</span></p>
+                    <p class="modal-card-title"><span>{{ trans('update') }}</span></p>
                     <button type="button" class="delete" @click="toggleModal()"/>
                 </header>
+
                 <section class="modal-card-body">
+                    <h3 class="title is-4 is-marginless">{{ trans('to_be_merged') }}: "{{ mergerKeysCount }}"</h3>
+                    <table class="table diff is-narrow">
+                        <tr v-for="item in keysToBeMerged" :key="item">
+                            <td>{{ item }}</td>
+                            <td><span class="icon"><icon name="arrow-right" scale="0.8"/></span></td>
+                            <td>{{ getUpdatedKey(item) }}</td>
+                        </tr>
+                    </table>
+
                     <input v-model="mergerName" class="input" type="text" placeholder="keyName" autofocus>
                 </section>
 
                 <footer class="modal-card-foot">
-                    <button type="reset" class="button" @click="toggleModal()">{{ trans('cancel') }}</button>
-                    <button type="submit" class="button is-success" @click="mergeKeys()">{{ trans('save') }}</button>
+                    <div class="level full-width">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="form-switcher">
+                                    <input id="use_replace" v-model="useReplace" type="checkbox">
+                                    <label class="switcher" for="use_replace"/>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <label class="label" for="use_replace">Replace instead ?</label>
+                            </div>
+                        </div>
+
+                        <div class="level-right">
+                            <div class="level-item">
+                                <button type="reset" class="button" @click="toggleModal()">{{ trans('cancel') }}</button>
+                            </div>
+                            <div class="level-item">
+                                <button type="submit" class="button is-success" @click="mergeKeys()">{{ trans('save') }}</button>
+                            </div>
+                        </div>
+                    </div>
                 </footer>
             </div>
         </div>
     </div>
 </template>
 
-<style scoped>
-    #tippyTemplate {
-        display: none;
-    }
+<style scoped lang="scss">
+    .diff {
+        margin-left: 2rem;
+        margin-top: 1rem;
+        border-left: 5px solid #00d1b2;
 
-    .c2c {
-        cursor: pointer;
+        td {
+            border: none;
+            text-align: left !important;
+        }
     }
 
     th {
@@ -285,27 +310,17 @@ export default{
         return this.$parent.$data
     },
     mounted() {
-        // copy to clipboard
-        document.body.onclick = (e) => {
-            e = window.event ? e.srcElement : e.target
-            if (e.classList.contains('c2c')) {
-                this.$copyText(this.keyToCopy)
-            }
-        }
+        document.addEventListener('click', this.onClick)
+        document.addEventListener('keydown', this.onKeydown)
     },
     updated() {
         this.tableColumnResize()
     },
+    beforeDestroy() {
+        document.removeEventListener('click', this.onClick)
+        document.removeEventListener('keydown', this.onKeydown)
+    },
     computed: {
-        keysList() {
-            if (this.itemsCount) {
-                return this.filteredList.map((e) => {
-                    return e.name
-                })
-            }
-
-            return []
-        },
         filteredList() {
             let val = this.searchFor
 
@@ -320,13 +335,29 @@ export default{
         },
         itemsCount() {
             return this.filteredList.length
+        },
+        keysList() {
+            if (this.itemsCount) {
+                return this.filteredList.map((e) => {
+                    return e.name
+                })
+            }
+
+            return []
+        },
+        mergerKeysCount() {
+            return this.keysToBeMerged.length
         }
     },
     methods: {
         showSection() {
-            return this.dirs &&
-                this.dirs.length &&
-                this.selectedDir || this.files.length
+            if (this.dirs) {
+                return this.dirs &&
+                    this.dirs.length &&
+                    (this.selectedDir || this.files.length)
+            }
+
+            return this.files.length
         },
         hasDirs() {
             return this.dirs && this.dirs.length && this.selectedDir
@@ -457,8 +488,17 @@ export default{
 
             this.newItemCounter++
         },
-        removeItem(index) {
+        removeItem(name, index) {
             this.newEntry()
+
+            if (this.searchFor) {
+                return this.selectedFileDataClone.some((e, i) => {
+                    if (e.name == name) {
+                        this.selectedFileDataClone.splice(i, 1)
+                    }
+                })
+            }
+
             this.selectedFileDataClone.splice(index, 1)
         },
         resetData() {
@@ -471,29 +511,61 @@ export default{
                 this.selectedFileDataClone = cloneDeep(this.selectedFileData)
             })
 
-            this.parentMethod('resetAll', ['keyToCopy', 'newKeys'])
+            this.parentMethod('resetAll', ['newKeys'])
         },
 
         // keys merger
-        wrapAll() {
-            if (this.toBeMergedKeys.length) {
-                return this.toBeMergedKeys = []
+        getUpdatedKey(item) {
+            let mergerName = this.mergerName
+
+            if (this.useReplace) {
+                return item.replace(mergerName, '')
             }
 
-            this.toBeMergedKeys = this.keysList
+            return mergerName ? `${mergerName}${item}` : item
         },
         mergeKeys() {
-            this.toBeMergedKeys.map((old_key) => {
-                let new_key = `${this.mergerName}.${old_key}`
-
-                this.newKeyOps(old_key, new_key)
-            })
-
             this.toggleModal()
+
+            let mergerName = this.mergerName
+
+            if (this.keysList.includes(mergerName)) {
+                this.$refs.search.value = mergerName
+                this.searchFor = mergerName
+
+                return this.showNotif(this.trans('merge_key_warning').replace(':attr', mergerName), 'danger')
+            }
+
+            // replace
+            if (this.useReplace) {
+                this.keysToBeMerged.map((old_key) => {
+                    let new_key = old_key.replace(mergerName, '')
+
+                    this.newKeyOps(old_key, new_key)
+                })
+            } else {
+                // merge
+                this.keysToBeMerged.map((old_key) => {
+                    let new_key = `${mergerName}${old_key}`
+
+                    this.newKeyOps(old_key, new_key)
+                })
+            }
+
+            // this.mergerName = ''
+            this.useReplace = false
             this.submitNewData()
             this.wrapAll()
         },
+        wrapAll() {
+            if (this.mergerKeysCount) {
+                return this.keysToBeMerged = []
+            }
+
+            this.keysToBeMerged = this.keysList
+        },
         toggleModal(val = false) {
+            // save changed data first
             if (val && this.dataChanged) {
                 return this.showNotif(this.trans('merge_warning'), 'warning')
             }
@@ -502,19 +574,22 @@ export default{
         },
 
         // util
+        arryFilter(arr) {
+            return arr.filter((e) => e)
+        },
+        clickOnCkBox(id) {
+            document.querySelector(`#${id}`).click()
+        },
         newEntry() {
             this.dataChanged = true
         },
-        saveNewKey(e) {
-            let text = e.target.innerText = e.target.innerText.toLowerCase().replace(/\s/g, '_')
-            let old_key = e.target.dataset.mainKey
-            let new_key = text
-
-            this.newKeyOps(old_key, new_key)
-        },
-        newKeyOps(old_key, new_key) {
+        newKeyOps(old_key, new_key, item = null) {
             if (old_key !== new_key) {
                 this.newEntry()
+
+                if (item) {
+                    this.HLChanged(item)
+                }
 
                 if (this.newKeys) {
                     return this.newKeys[old_key] = new_key
@@ -523,15 +598,27 @@ export default{
                 this.newKeys = {[old_key]: new_key}
             }
         },
+        saveNewKey(e) {
+            let target = e.target
+
+            let text = target.innerText = target.innerText.toLowerCase().replace(/\s/g, '_')
+            let old_key = target.dataset.mainKey
+            let new_key = text
+
+            this.newKeyOps(old_key, new_key, target)
+        },
         saveNewValue(e) {
-            let code = e.target.dataset.code
-            let key = e.target.dataset.mainKey
-            let value = e.target.innerText = e.target.innerText.replace(/\n/g, '<br>')
+            let target = e.target
+
+            let code = target.dataset.code
+            let key = target.dataset.mainKey
+            let value = target.innerText = target.innerText.replace(/\n/g, '<br>')
             let fileData = this.selectedFileDataClone
 
             fileData.some((e, i) => {
                 if (e.name == key && e.locales[code] !== value) {
                     this.newEntry()
+                    this.HLChanged(target)
                     fileData[i].locales[code] = value
                 }
             })
@@ -543,6 +630,58 @@ export default{
         },
         scrollToBottom() {
             document.querySelector('.toDown').click()
+        },
+        getTTC(key, val) {
+            let k = key
+
+            // place holders
+            let arr = this.arryFilter(Object.values(val))
+            if (arr.length) {
+                let test = arr[0].match(new RegExp(/:\w+/g))
+
+                if (test) {
+                    let str = ', ['
+                    test.forEach((e) => {
+                        str += `'${e.replace(':', '')}' => '', `
+                    })
+                    str += ']'
+                    str = str.replace(', ]', '])')
+
+                    k = k.replace(new RegExp(/[)$]/g), str)
+                    return `<span style="cursor: pointer" class="c2c">${k}</span>`
+                }
+            }
+
+            return `<span style="cursor: pointer" class="c2c">${k}</span>`
+        },
+        HLChanged(item) {
+            item.classList.remove('nestedKeys')
+            item.classList.add('changedKeys')
+        },
+
+        // events
+        onClick(e) {
+            let item = e.target
+
+            if (item.classList.contains('c2c')) {
+                this.$copyText(item.textContent)
+            }
+        },
+        onKeydown(e) {
+            let esc = e.keyCode == '27'
+
+            if (esc) {
+                if (this.showModal) {
+                    this.showModal = false
+                }
+
+                if (this.isFocused('search', e)) {
+                    this.resetSearch()
+                }
+            }
+        },
+        isFocused(item, e) {
+            return this.$refs[item] && this.$refs[item].contains(e.target)
         },
 
         // parent
