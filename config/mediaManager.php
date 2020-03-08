@@ -36,7 +36,7 @@ return [
      *
      * to add & nest folders in one go add '\/'
      */
-    'allowed_folderNames_chars' => '_-\s',
+    'allowed_folderNames_chars' => '_\-\s',
 
     /*
      * disallow uploading files with the following mimetypes
@@ -100,7 +100,7 @@ return [
     'show_ratio_bar' => true,
 
     /*
-     * preview and remove files b4 uploading
+     * preview files b4 uploading
      */
     'preview_files_before_upload' => true,
 
@@ -110,12 +110,12 @@ return [
     'database_connection' => env('DB_CONNECTION'),
 
     /*
-     * Locked items table name (defaults to "locked")
+     * Locked items table name
      */
     'table_locked' => 'locked',
 
     /*
      * loaded chunk amount "pagination"
      */
-    'pagination_amount' => 30,
+    'pagination_amount' => 50,
 ];
