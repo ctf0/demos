@@ -35,6 +35,7 @@ return [
      * white space
      *
      * to add & nest folders in one go add '\/'
+     * avoid using '#' as browser interpret it as an anchor
      */
     'allowed_folderNames_chars' => '_\-\s',
 
@@ -66,7 +67,7 @@ return [
      * put here any global function that
      * doesnt take arguments
      */
-    'sanitized_text' => 'uniqid',
+    'sanitized_text' => uniqid(),
 
     /*
      * display file last modification time as

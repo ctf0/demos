@@ -20,6 +20,7 @@
         "worker-loader": "^2.0.0"
     },
     "dependencies": {
+        "annyang": "^2.6.1",
         "axios": "^0.19.0",
         "cropperjs": "^1.5.6",
         "dropzone": "^5.5.1",
