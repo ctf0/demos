@@ -19,7 +19,7 @@
     },
     "require-dev": {
         "facade/ignition": "*",
-        "fzaninotto/faker": "*",
+        "fakerphp/faker": "*",
         "mockery/mockery": "*",
         "nunomaduro/collision": "*",
         "phpunit/phpunit": "*"
@@ -50,8 +50,16 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi",
-            "App\\Providers\\EventServiceProvider::postAutoloadDump"
+            "@php artisan package:discover --ansi"
+        ],
+        "post-install-cmd": [
+            "@php artisan pcl:post-install"
+        ],
+        "post-update-cmd": [
+            "@php artisan pcl:post-update"
+        ],
+        "pre-package-uninstall": [
+            "@php artisan pcl:pre-uninstall"
         ]
     },
     "config": {

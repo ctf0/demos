@@ -1,7 +1,7 @@
 const mix = require('laravel-mix')
 
 let pub = 'public/assets/vendor'
-let res = 'resources/assets/vendor'
+let res = 'resources/assets'
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -13,9 +13,9 @@ let res = 'resources/assets/vendor'
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
+mix.js(res + '/js/app.js', 'public/js')
 // .sass('resources/assets/sass/app.scss', 'public/css')
 
 // MediaManager
-mix.sass(res + '/MediaManager/sass/manager.scss', pub + '/MediaManager/style.css')
-    .copyDirectory(res + '/MediaManager/dist', pub + '/MediaManager')
+mix.sass(res + '/vendor/MediaManager/sass/manager.scss', pub + '/MediaManager/style.css')
+    .copyDirectory(res + '/vendor/MediaManager/dist', pub + '/MediaManager')
