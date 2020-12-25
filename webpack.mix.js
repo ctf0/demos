@@ -1,4 +1,19 @@
 const mix = require('laravel-mix')
+const webpack = require('webpack')
+
+mix.webpackConfig({
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.js'
+        }
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            process : 'process/browser',
+            Buffer  : ['buffer', 'Buffer']
+        })
+    ]
+})
 
 let pub = 'public/assets/vendor'
 let res = 'resources/assets'
@@ -12,8 +27,7 @@ let res = 'resources/assets'
  | file for the application as well as bundling up all the JS files.
  |
  */
-
-mix.js(res + '/js/app.js', 'public/js')
+mix.js(res + '/js/app.js', 'public/js').vue()
 // .sass('resources/assets/sass/app.scss', 'public/css')
 
 // MediaManager
