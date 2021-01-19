@@ -2,6 +2,11 @@ const mix = require('laravel-mix')
 const webpack = require('webpack')
 
 mix.webpackConfig({
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.js'
+        }
+    },
     plugins: [
         new webpack.ProvidePlugin({
             process : 'process/browser',
