@@ -5,6 +5,7 @@
 /public/assets
 /public/js
 /public/*.worker.js
+/public/workers/*
 /storage/*.key
 /vendor
 /.idea

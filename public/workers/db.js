@@ -1,83 +1,239 @@
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/idb-keyval/dist/idb-keyval.mjs":
-/*!*****************************************************!*\
-  !*** ./node_modules/idb-keyval/dist/idb-keyval.mjs ***!
-  \*****************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+/***/ "./resources/assets/vendor/MediaManager/js/webworkers/db.js":
+/*!******************************************************************!*\
+  !*** ./resources/assets/vendor/MediaManager/js/webworkers/db.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var idb_keyval__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! idb-keyval */ "./node_modules/idb-keyval/dist/esm/index.js");
+
+var store = (0,idb_keyval__WEBPACK_IMPORTED_MODULE_0__.createStore)('ctf0-Media_Manager', 'media_manager');
+
+onmessage = function onmessage(e) {
+  var _e$data = e.data,
+      type = _e$data.type,
+      key = _e$data.key,
+      val = _e$data.val;
+
+  switch (type) {
+    case 'get':
+      (0,idb_keyval__WEBPACK_IMPORTED_MODULE_0__.get)(key, store).then(function (res) {
+        return postMessage(res);
+      });
+      break;
+
+    case 'set':
+      (0,idb_keyval__WEBPACK_IMPORTED_MODULE_0__.set)(key, val, store).then(function () {
+        return postMessage(true);
+      })["catch"](function () {
+        return postMessage(false);
+      });
+      break;
+
+    case 'del':
+      (0,idb_keyval__WEBPACK_IMPORTED_MODULE_0__.del)(key, store).then(function () {
+        return postMessage(true);
+      })["catch"](function () {
+        return postMessage(false);
+      });
+      break;
+
+    case 'clr':
+      (0,idb_keyval__WEBPACK_IMPORTED_MODULE_0__.clear)(store).then(function () {
+        return postMessage(true);
+      })["catch"](function () {
+        return postMessage(false);
+      });
+      break;
+
+    case 'keys':
+      (0,idb_keyval__WEBPACK_IMPORTED_MODULE_0__.keys)(store).then(function (res) {
+        return postMessage(res);
+      })["catch"](function () {
+        return postMessage(false);
+      });
+      break;
+  }
+};
+
+/***/ }),
+
+/***/ "./node_modules/idb-keyval/dist/esm/index.js":
+/*!***************************************************!*\
+  !*** ./node_modules/idb-keyval/dist/esm/index.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Store": () => /* binding */ Store,
-/* harmony export */   "get": () => /* binding */ get,
-/* harmony export */   "set": () => /* binding */ set,
-/* harmony export */   "del": () => /* binding */ del,
 /* harmony export */   "clear": () => /* binding */ clear,
-/* harmony export */   "keys": () => /* binding */ keys
+/* harmony export */   "createStore": () => /* binding */ createStore,
+/* harmony export */   "del": () => /* binding */ del,
+/* harmony export */   "entries": () => /* binding */ entries,
+/* harmony export */   "get": () => /* binding */ get,
+/* harmony export */   "getMany": () => /* binding */ getMany,
+/* harmony export */   "keys": () => /* binding */ keys,
+/* harmony export */   "promisifyRequest": () => /* binding */ promisifyRequest,
+/* harmony export */   "set": () => /* binding */ set,
+/* harmony export */   "setMany": () => /* binding */ setMany,
+/* harmony export */   "update": () => /* binding */ update,
+/* harmony export */   "values": () => /* binding */ values
 /* harmony export */ });
-class Store {
-    constructor(dbName = 'keyval-store', storeName = 'keyval') {
-        this.storeName = storeName;
-        this._dbp = new Promise((resolve, reject) => {
-            const openreq = indexedDB.open(dbName, 1);
-            openreq.onerror = () => reject(openreq.error);
-            openreq.onsuccess = () => resolve(openreq.result);
-            // First time setup: create an empty object store
-            openreq.onupgradeneeded = () => {
-                openreq.result.createObjectStore(storeName);
-            };
-        });
+function promisifyRequest(request) {
+    return new Promise((resolve, reject) => {
+        // @ts-ignore - file size hacks
+        request.oncomplete = request.onsuccess = () => resolve(request.result);
+        // @ts-ignore - file size hacks
+        request.onabort = request.onerror = () => reject(request.error);
+    });
+}
+function createStore(dbName, storeName) {
+    const request = indexedDB.open(dbName);
+    request.onupgradeneeded = () => request.result.createObjectStore(storeName);
+    const dbp = promisifyRequest(request);
+    return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
+}
+let defaultGetStoreFunc;
+function defaultGetStore() {
+    if (!defaultGetStoreFunc) {
+        defaultGetStoreFunc = createStore('keyval-store', 'keyval');
     }
-    _withIDBStore(type, callback) {
-        return this._dbp.then(db => new Promise((resolve, reject) => {
-            const transaction = db.transaction(this.storeName, type);
-            transaction.oncomplete = () => resolve();
-            transaction.onabort = transaction.onerror = () => reject(transaction.error);
-            callback(transaction.objectStore(this.storeName));
-        }));
-    }
+    return defaultGetStoreFunc;
 }
-let store;
-function getDefaultStore() {
-    if (!store)
-        store = new Store();
-    return store;
+/**
+ * Get a value by its key.
+ *
+ * @param key
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function get(key, customStore = defaultGetStore()) {
+    return customStore('readonly', (store) => promisifyRequest(store.get(key)));
 }
-function get(key, store = getDefaultStore()) {
-    let req;
-    return store._withIDBStore('readonly', store => {
-        req = store.get(key);
-    }).then(() => req.result);
-}
-function set(key, value, store = getDefaultStore()) {
-    return store._withIDBStore('readwrite', store => {
+/**
+ * Set a value with a key.
+ *
+ * @param key
+ * @param value
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function set(key, value, customStore = defaultGetStore()) {
+    return customStore('readwrite', (store) => {
         store.put(value, key);
+        return promisifyRequest(store.transaction);
     });
 }
-function del(key, store = getDefaultStore()) {
-    return store._withIDBStore('readwrite', store => {
+/**
+ * Set multiple values at once. This is faster than calling set() multiple times.
+ * It's also atomic – if one of the pairs can't be added, none will be added.
+ *
+ * @param entries Array of entries, where each entry is an array of `[key, value]`.
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function setMany(entries, customStore = defaultGetStore()) {
+    return customStore('readwrite', (store) => {
+        entries.forEach((entry) => store.put(entry[1], entry[0]));
+        return promisifyRequest(store.transaction);
+    });
+}
+/**
+ * Get multiple values by their keys
+ *
+ * @param keys
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function getMany(keys, customStore = defaultGetStore()) {
+    return customStore('readonly', (store) => Promise.all(keys.map((key) => promisifyRequest(store.get(key)))));
+}
+/**
+ * Update a value. This lets you see the old value and update it as an atomic operation.
+ *
+ * @param key
+ * @param updater A callback that takes the old value and returns a new value.
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function update(key, updater, customStore = defaultGetStore()) {
+    return customStore('readwrite', (store) => 
+    // Need to create the promise manually.
+    // If I try to chain promises, the transaction closes in browsers
+    // that use a promise polyfill (IE10/11).
+    new Promise((resolve, reject) => {
+        store.get(key).onsuccess = function () {
+            try {
+                store.put(updater(this.result), key);
+                resolve(promisifyRequest(store.transaction));
+            }
+            catch (err) {
+                reject(err);
+            }
+        };
+    }));
+}
+/**
+ * Delete a particular key from the store.
+ *
+ * @param key
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function del(key, customStore = defaultGetStore()) {
+    return customStore('readwrite', (store) => {
         store.delete(key);
+        return promisifyRequest(store.transaction);
     });
 }
-function clear(store = getDefaultStore()) {
-    return store._withIDBStore('readwrite', store => {
+/**
+ * Clear all values in the store.
+ *
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function clear(customStore = defaultGetStore()) {
+    return customStore('readwrite', (store) => {
         store.clear();
+        return promisifyRequest(store.transaction);
     });
 }
-function keys(store = getDefaultStore()) {
-    const keys = [];
-    return store._withIDBStore('readonly', store => {
+function eachCursor(customStore, callback) {
+    return customStore('readonly', (store) => {
         // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
         // And openKeyCursor isn't supported by Safari.
-        (store.openKeyCursor || store.openCursor).call(store).onsuccess = function () {
+        store.openCursor().onsuccess = function () {
             if (!this.result)
                 return;
-            keys.push(this.result.key);
+            callback(this.result);
             this.result.continue();
         };
-    }).then(() => keys);
+        return promisifyRequest(store.transaction);
+    });
+}
+/**
+ * Get all keys in the store.
+ *
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function keys(customStore = defaultGetStore()) {
+    const items = [];
+    return eachCursor(customStore, (cursor) => items.push(cursor.key)).then(() => items);
+}
+/**
+ * Get all values in the store.
+ *
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function values(customStore = defaultGetStore()) {
+    const items = [];
+    return eachCursor(customStore, (cursor) => items.push(cursor.value)).then(() => items);
+}
+/**
+ * Get all entries in the store. Each entry is an array of `[key, value]`.
+ *
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function entries(customStore = defaultGetStore()) {
+    const items = [];
+    return eachCursor(customStore, (cursor) => items.push([cursor.key, cursor.value])).then(() => items);
 }
 
 
@@ -140,61 +296,9 @@ function keys(store = getDefaultStore()) {
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-(() => {
-/*!******************************************************************!*\
-  !*** ./resources/assets/vendor/MediaManager/js/webworkers/db.js ***!
-  \******************************************************************/
-var db = __webpack_require__(/*! idb-keyval */ "./node_modules/idb-keyval/dist/idb-keyval.mjs");
-
-var store = new db.Store('ctf0-Media_Manager', 'media_manager');
-
-onmessage = function onmessage(e) {
-  var _e$data = e.data,
-      type = _e$data.type,
-      key = _e$data.key,
-      val = _e$data.val;
-
-  switch (type) {
-    case 'get':
-      db.get(key, store).then(function (res) {
-        return postMessage(res);
-      });
-      break;
-
-    case 'set':
-      db.set(key, val, store).then(function () {
-        return postMessage(true);
-      })["catch"](function () {
-        return postMessage(false);
-      });
-      break;
-
-    case 'del':
-      db.del(key, store).then(function () {
-        return postMessage(true);
-      })["catch"](function () {
-        return postMessage(false);
-      });
-      break;
-
-    case 'clr':
-      db.clear(store).then(function () {
-        return postMessage(true);
-      })["catch"](function () {
-        return postMessage(false);
-      });
-      break;
-
-    case 'keys':
-      db.keys(store).then(function (res) {
-        return postMessage(res);
-      })["catch"](function () {
-        return postMessage(false);
-      });
-      break;
-  }
-};
-})();
-
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__("./resources/assets/vendor/MediaManager/js/webworkers/db.js");
+/******/ 	// This entry module used 'exports' so it can't be inlined
 /******/ })()
 ;
