@@ -35,7 +35,7 @@
         "music-metadata-browser": "^2.2.1",
         "plyr": "^3.6.4",
         "vue": "^2.6.12",
-        "vue-awesome": "v2",
+        "vue-awesome": "^4",
         "vue-clipboard2": "^0.3.1",
         "vue-focuspoint-component": "^2.0.1",
         "vue-image-compare2": "^1.0.0",
