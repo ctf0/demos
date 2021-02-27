@@ -7,18 +7,18 @@
         "prod": "mix --production"
     },
     "devDependencies": {
-        "@babel/core": "^7.12.13",
-        "@babel/plugin-transform-runtime": "^7.12.13",
-        "@babel/preset-env": "^7.12.13",
+        "@babel/core": "^7.13.8",
+        "@babel/plugin-transform-runtime": "^7.13.8",
+        "@babel/preset-env": "^7.13.8",
         "babel-loader": "^8.2.2",
         "buffer": "^6.0.3",
         "cross-env": "^7.0",
-        "laravel-mix": "^6.0.11",
-        "postcss": "^8.2.4",
+        "laravel-mix": "^6.0.13",
+        "postcss": "^8.2.6",
         "process": "^0.11.10",
         "resolve-url-loader": "^3.1.2",
-        "sass": "^1.32.6",
-        "sass-loader": "^10.1.1",
+        "sass": "^1.32.8",
+        "sass-loader": "^11.0.1",
         "style-loader": "^2.0.0",
         "vue-loader": "^15.9.6",
         "vue-template-compiler": "^2.6.12"
@@ -26,13 +26,13 @@
     "dependencies": {
         "annyang": "^2.6.1",
         "axios": "^0.21.1",
-        "cropperjs": "^1.5.9",
-        "dropzone": "^5.7.2",
+        "cropperjs": "^1.5.11",
+        "dropzone": "^5.7.6",
         "fuse.js": "^6.4.6",
         "idb-keyval": "^5.0.2",
         "keycode": "^2.2.0",
         "lottie-web": "^5.7.6",
-        "music-metadata-browser": "^2.2.1",
+        "music-metadata-browser": "^2.2.6",
         "plyr": "^3.6.4",
         "vue": "^2.6.12",
         "vue-awesome": "^4",
@@ -46,6 +46,6 @@
         "vue-notif": "^2.0.0",
         "vue-tippy": "v2",
         "vue-touch": "^2.0.0-beta.4",
-        "vue2-filters": "^0.11.1"
+        "vue2-filters": "^0.12.0"
     }
 }
