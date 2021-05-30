@@ -46,7 +46,7 @@ return [
     'unallowed_mimes' => ['php', 'java'],
 
     /*
-     * disallow uploading files with the following ext
+     * disallow uploading files with the following extensions
      * https://en.wikipedia.org/wiki/List_of_filename_extensions
      */
     'unallowed_ext' => ['php', 'jav', 'py'],
@@ -73,7 +73,7 @@ return [
      * put here any global function that
      * doesnt take arguments
      */
-    'sanitized_text' => uniqid(),
+    'sanitized_text' => 'uniqid',
 
     /*
      * display file last modification time as
