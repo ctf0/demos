@@ -9,15 +9,11 @@
     "type": "project",
     "require": {
         "ctf0/media-manager": "dev-master",
-        "fideloper/proxy": "*",
-        "fruitcake/laravel-cors": "*",
         "guzzlehttp/guzzle": "*",
-        "laravel/framework": "8.*",
-        "laravel/tinker": "*",
-        "league/flysystem-cached-adapter": "*"
+        "laravel/framework": "^10.0",
+        "laravel/tinker": "*"
     },
     "require-dev": {
-        "facade/ignition": "*",
         "fakerphp/faker": "*",
         "mockery/mockery": "*",
         "nunomaduro/collision": "*",
@@ -58,9 +54,6 @@
         ],
         "post-update-cmd": [
             "@php artisan pcl:post-update"
-        ],
-        "pre-package-uninstall": [
-            "@php artisan pcl:pre-uninstall"
         ]
     },
     "config": {
