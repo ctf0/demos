@@ -1,7 +1,7 @@
 # [Laravel Media Manager](https://github.com/ctf0/Laravel-Media-Manager)
 
 - `git clone -b media-manager --single-branch https://github.com/ctf0/demos mm-Lv10`
-- `cd media-manager/`
+- `cd mm-Lv10/`
 - `npm install`
 - `composer update`
 - `php artisan storage:link`
